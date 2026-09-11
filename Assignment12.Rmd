@@ -123,6 +123,14 @@ Each week consists of 1, 2, or 3 subquestions. The total amount of points you ca
 
 #WRITE YOUR CODE HERE
 
+# Summary statistics for the revenue variable
+summary_stats <- summary(movies2$revenue)
+mean_rev   <- mean(movies2$revenue, na.rm = TRUE)
+median_rev <- median(movies2$revenue, na.rm = TRUE)
+max_rev    <- max(movies2$revenue, na.rm = TRUE)
+min_rev    <- min(movies2$revenue, na.rm = TRUE)
+cat("Mean:", mean_rev, "\nMedian:", median_rev, "\nMax:", max_rev, "\nMin:", min_rev)
+
 ```
 
 **Your Answer:**
