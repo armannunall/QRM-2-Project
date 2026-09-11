@@ -1,7 +1,7 @@
 ---
 title: "QRM II Graded Assignment (12)"
 subtitle: "Period 1, 2026"
-author: "Giorgia Tanzi 2887743"
+author: "Giorgia Tanzi 28877ddsu43"
 date:  "`r format(Sys.Date(), '%d-%m-%Y')`"
 output:
   pdf_document:
