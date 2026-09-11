@@ -96,6 +96,8 @@ One subject is one movie. Each row in the dataset represents a single movie.
 ```{r answer 2}
 #WRITE YOUR CODE HERE
 
+str(movies2)
+
 ```
 
 **Your Answer:**
