@@ -3,7 +3,7 @@ title: "QRM II Graded Assignment (12)"
 subtitle: "Period 1, 2026"
 author: "Giorgia Tanzi 2887743"
 date:  "`r format(Sys.Date(), '%d-%m-%Y')`"
-output: do you see this
+output: 
   pdf_document:
     number_sections: true
   html_document:
