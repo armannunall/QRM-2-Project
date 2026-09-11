@@ -63,14 +63,33 @@ We encourage you to keep your code blocks, printing statements, and final answer
 
 1.  Find the dataset “movies2.tsv” on Canvas. Describe your data set: How many observations does it have. How many variables are there? How many subjects? What consists of a subject? \textbf{[4 points]}
 
-```{r}
-#WRITE YOUR CODE HERE
+# Number of observations (rows)
+nrow(movies)
+
+# Number of variables (columns)
+ncol(movies)
+
+# Dimensions: observations x variables
+dim(movies)
+
+# Look at the variable names
+names(movies)
+
+# View first few observations
+head(movies)
 
 ```
-
 **Your Answer:**
 
-Write your response here.
+How many observations?
+606 observations.
+How many variables?
+19 variables.
+How many subjects?
+606 subjects.
+What consists of a subject?
+One subject is one movie. Each row in the dataset represents a single movie.
+
 
 2. Which of the following types of variables are present in your data set? (i) nominal; (ii) ordinal; (iii); continuous; (iv) discrete. If present, name one example of such a variable present in your data set. \textbf{[4 points]}
 
