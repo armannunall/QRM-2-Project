@@ -141,7 +141,8 @@ Write your formulated response here.
 
 ```{r}
 
-#WRITE YOUR CODE HERE
+movies2[which.max(movies2$revenue), ]
+movies2[which.min(movies2$revenue), ]
 
 ```
 
@@ -153,7 +154,13 @@ Write your formulated response here.
 
 ```{r}
 
-#WRITE YOUR CODE HERE
+hist(
+  movies2$revenue,
+  main = "Distribution of Movie Revenue",
+  xlab = "Revenue",
+  ylab = "Frequency",
+  breaks = 30
+)
 
 ```
 
@@ -164,8 +171,14 @@ Write your formulated response here.
 *Step d*
 
 ```{r}
+#make var
+movies2$log_revenue <- log(movies2$revenue)
 
-#WRITE YOUR CODE HERE
+#check 0 obs
+movies2[movies2$revenue == 0, c("revenue", "log_revenue")]
+
+#calc mean
+mean(movies2$log_revenue)
 
 ```
 
@@ -177,7 +190,23 @@ Write your formulated response here.
 
 ```{r}
 
-#WRITE YOUR CODE HERE
+movies2$log_revenue <- ifelse(
+  movies2$revenue == 0,
+  NA,
+  log(movies2$revenue)
+)
+
+#calculate mean 
+mean(movies2$log_revenue, na.rm = TRUE)
+
+#create hist
+hist(
+  movies2$log_revenue,
+  main = "Distribution of Log Revenue",
+  xlab = "Log Revenue",
+  ylab = "Frequency",
+  breaks = 30
+)
 
 ```
 
