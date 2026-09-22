@@ -219,8 +219,30 @@ Write your formulated response here.
 *Step f*
 
 ```{r}
+skewness <- function(x) {
+  x <- na.omit(x)
+  n <- length(x)
+  m3 <- sum((x - mean(x))^3) / n
+  s3 <- (sum((x - mean(x))^2) / n)^(3/2)
+  return(m3 / s3)
+}
 
-#WRITE YOUR CODE HERE
+kurtosis <- function(x) {
+  x <- na.omit(x)
+  n <- length(x)
+  m4 <- sum((x - mean(x))^4) / n
+  s4 <- (sum((x - mean(x))^2) / n)^2
+  return(m4 / s4) # Pearson kurtosis (normal distribution = 3)
+}
+
+skew_rev <- skewness(movies2$revenue)
+kurt_rev <- kurtosis(movies2$revenue)
+
+skew_log <- skewness(movies2$log_revenue)
+kurt_log <- kurtosis(movies2$log_revenue)
+
+cat("Raw Revenue  -> Skewness:", skew_rev, "| Kurtosis:", kurt_rev, "\n")
+cat("Log Revenue  -> Skewness:", skew_log, "| Kurtosis:", kurt_log, "\n")
 
 ```
 
