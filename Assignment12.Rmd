@@ -64,7 +64,7 @@ We encourage you to keep your code blocks, printing statements, and final answer
 # Week 1 
 
 1.  Find the dataset “movies2.tsv” on Canvas. Describe your data set: How many observations does it have. How many variables are there? How many subjects? What consists of a subject? \textbf{[4 points]}
-
+``` {r}
 # Number of observations (rows)
 nrow(movies2)
 
@@ -459,7 +459,8 @@ binom_test_res
 Null Hypothesis (H_0): p = 0.5
 Alternative Hypothesis (H_1): p != 0.5 
 Significance Level: alpha = 0.05
-
+p = 0.9125874 > 0.5 
+We can reject H_0
 *step c*
 
 ```{r}
