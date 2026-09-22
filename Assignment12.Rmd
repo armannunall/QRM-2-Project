@@ -253,9 +253,7 @@ Write your formulated response here.
 # Week 2 
 1 Is your dataset movies2.tsv the full population, or is it a sample of a larger population? If the latter, how would you describe the full population? \textbf{[4 points]}
 
-*Your answer here:*
-
-Write your formulated response here.
+The movies2.tsv dataset is a sample of a larger population, the whole population consists of all movies that have the same selection criteria as the movies included in this dataset.
 
 
 2 For this question, you will assume that your data set is the full population. 
