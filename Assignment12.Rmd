@@ -379,24 +379,6 @@ legend("topright", legend = "Discrete uniform: P = 1/12",
 Write your formulated response here.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Week 3 
 
 For the next part of the assignment, assume that the movies in your data frame are a random sample of a larger population of movies. 
