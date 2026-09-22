@@ -3,9 +3,9 @@ title: "QRM II Graded Assignment (12)"
 subtitle: "Period 1, 2026"
 author: "
 Dania Alkhulaifi 2865792 
-Giorgia Tanzi 2887743"
+Giorgia Tanzi 2887743
 Arman Tuna Ünal 2893496
-Abhigyan Hazarika 2888419
+Abhigyan Hazarika 2888419"
 date:  "`r format(Sys.Date(), '%d-%m-%Y')`"
 output: 
   pdf_document:
@@ -336,7 +336,8 @@ For the next part of the assignment, assume that the movies in your data frame a
 1. Give a 90 percent confidence interval for the variable *revenue*. Interpret the result. \textbf{[2 points]}
 ```{r}
 #WRITE YOUR CODE HERE
-
+ci_revenue <- t.test(movies2$revenue, conf.level = 0.90)$conf.int
+ci_revenue
 
 ```
 
@@ -355,7 +356,8 @@ d. Assume that the variance of revenue for movies with a male director in your d
 
 ```{r}
 #WRITE YOUR CODE HERE
-
+gender_counts <- table(movies2$director_gender)
+gender_counts
 ```
 
 **Your Answer:**
