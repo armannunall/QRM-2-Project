@@ -171,9 +171,9 @@ hist(
 
 ```
 
-**Your Answer:**
+The histogram of revenue is strongly right-skewed. Most movies are concentrated near $0 revenue, while only a small number of movies have very high revenues. Around 387 of the 606 movies are in the first bin, while only about 20 movies earn more than $500 million. A few blockbusters, such as Furious 7, are far out in the right tail.
 
-Write your formulated response here.
+This shows that movie revenues are very uneven. Most movies earn relatively little, while a small number of successful movies earn extremely high amounts. Because of these blockbusters, the mean revenue is much higher than the median, so the median gives a better idea of what a typical movie earns.
 
 *Step d*
 
