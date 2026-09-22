@@ -5,6 +5,7 @@ author: "
 Dania Alkhulaifi 2865792 
 Giorgia Tanzi 2887743"
 Arman Tuna Ünal 2893496
+Abhigyan Hazarika 2888419
 date:  "`r format(Sys.Date(), '%d-%m-%Y')`"
 output: 
   pdf_document:
