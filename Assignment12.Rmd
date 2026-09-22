@@ -187,9 +187,9 @@ mean(movies2$log_revenue)
 
 ```
 
-**Your Answer:**
+When log() is applied to revenue, the 187 movies with revenue equal to $0 become -Inf in R, not NA. This is because the logarithm of 0 is not defined and approaches negative infinity.
 
-Write your formulated response here.
+As a result, the mean of log_revenue is also -Inf. Even one -Inf value makes the overall mean -Inf, so this mean cannot be meaningfully interpreted.
 
 *Step e*
 
@@ -215,9 +215,11 @@ hist(
 
 ```
 
-**Your Answer:**
+After replacing the -Inf values for movies with zero revenue with NA, the mean of log_revenue is approximately 17.40. R now calculates the mean using the 419 movies with positive revenue.
 
-Write your formulated response here.
+The histogram of log_revenue is much more symmetric than the original revenue histogram. Instead of having a long right tail, most values are now concentrated around 17–19, with a slightly longer tail on the left. The distribution is therefore much closer to a bell shape, although it is still slightly left-skewed.
+
+The log transformation reduces the effect of extremely high revenues and spreads out the lower values. This makes the distribution more balanced and reduces the influence of blockbuster movies.
 
 *Step f*
 
@@ -249,26 +251,11 @@ cat("Log Revenue  -> Skewness:", skew_log, "| Kurtosis:", kurt_log, "\n")
 
 ```
 
-**Your Answer:**
+The skewness of raw revenue is approximately 3.75. Since this is a large positive value, it confirms that revenue is strongly right-skewed, with a long tail toward very high revenues. This also explains why the mean is higher than the median. The kurtosis is about 20.76, which is much higher than 3, the kurtosis of a normal distribution. This shows that the distribution has a sharp peak and several extreme values, such as blockbuster movies.
 
-Write your formulated response here.
+For `log_revenue`, the skewness is approximately −1.32. This means the distribution is slightly left-skewed, which matches the histogram from part e. The mean of `log_revenue` (17.40) is also slightly below the median (17.88). Its kurtosis is around 5.58. This is still higher than 3, so the distribution is still more peaked than a normal distribution.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Overall, the log transformation greatly reduces both the skewness and kurtosis of revenue. The distribution becomes more symmetric and less affected by extreme values, although it is still not perfectly normal.
 
 
 # Week 2 
