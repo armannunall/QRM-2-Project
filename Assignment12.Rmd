@@ -341,9 +341,7 @@ ci_revenue
 
 ```
 
-**Your Answer:**
-
-Write your formulated response here.
+The 90% confidence interval for the population mean revenue is approximately [$73,673,117 $96,234,088]. We are 90% confident that the true population mean revenue for all feature movies lies within this interval. In repeated sampling, 90% of such calculated confidence intervals will cover the true population mean.
 
 2
 
@@ -360,20 +358,22 @@ gender_counts <- table(movies2$director_gender)
 gender_counts
 ```
 
-**Your Answer:**
-
-Write your formulated response here.
+In the sample only 50 film directors were female and 522 of them were male directors 
 
 *step b*
 
 ```{r}
-#WRITE YOUR CODE HERE
+n_male <- sum(movies2$director_gender == "male", na.rm = TRUE)
+n_female <- sum(movies2$director_gender == "female", na.rm = TRUE)
+n_total <- n_male + n_female
 
+binom_test_res <- binom.test(x = n_male, n = n_total, p = 0.5)
+binom_test_res
 ```
 
-**Your Answer:**
-
-Write your formulated response here.
+Null Hypothesis (H_0): p = 0.5
+Alternative Hypothesis (H_1): p != 0.5 
+Significance Level: alpha = 0.05
 
 *step c*
 
