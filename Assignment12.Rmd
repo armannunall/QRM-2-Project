@@ -81,7 +81,6 @@ names(movies2)
 head(movies2)
 
 ```
-**Your Answer:**
 
 How many observations?
 606 observations.
@@ -96,7 +95,6 @@ One subject is one movie. Each row in the dataset represents a single movie.
 2. Which of the following types of variables are present in your data set? (i) nominal; (ii) ordinal; (iii); continuous; (iv) discrete. If present, name one example of such a variable present in your data set. \textbf{[4 points]}
 
 ```{r answer 2}
-#WRITE YOUR CODE HERE
 
 str(movies2)
 sapply(movies2, function(x) length(unique(x)))
@@ -130,8 +128,6 @@ Each week consists of 1, 2, or 3 subquestions. The total amount of points you ca
 *Step a*
 
 ```{r}
-
-#WRITE YOUR CODE HERE
 
 # Summary statistics for the revenue variable
 summary_stats <- summary(movies2$revenue)
@@ -187,9 +183,9 @@ mean(movies2$log_revenue)
 
 ```
 
-**Your Answer:**
+When log() is applied to revenue, the 187 movies with revenue equal to $0 become -Inf in R, not NA. This is because the logarithm of 0 is not defined and approaches negative infinity.
 
-Write your formulated response here.
+As a result, the mean of log_revenue is also -Inf. Even one -Inf value makes the overall mean -Inf, so this mean cannot be meaningfully interpreted.
 
 *Step e*
 
@@ -215,9 +211,11 @@ hist(
 
 ```
 
-**Your Answer:**
+After replacing the -Inf values for movies with zero revenue with NA, the mean of log_revenue is approximately 17.40. R now calculates the mean using the 419 movies with positive revenue.
 
-Write your formulated response here.
+The histogram of log_revenue is much more symmetric than the original revenue histogram. Instead of having a long right tail, most values are now concentrated around 17–19, with a slightly longer tail on the left. The distribution is therefore much closer to a bell shape, although it is still slightly left-skewed.
+
+The log transformation reduces the effect of extremely high revenues and spreads out the lower values. This makes the distribution more balanced and reduces the influence of blockbuster movies.
 
 *Step f*
 
@@ -249,26 +247,11 @@ cat("Log Revenue  -> Skewness:", skew_log, "| Kurtosis:", kurt_log, "\n")
 
 ```
 
-**Your Answer:**
+The skewness of raw revenue is approximately 3.75. Since this is a large positive value, it confirms that revenue is strongly right-skewed, with a long tail toward very high revenues. This also explains why the mean is higher than the median. The kurtosis is about 20.76, which is much higher than 3, the kurtosis of a normal distribution. This shows that the distribution has a sharp peak and several extreme values, such as blockbuster movies.
 
-Write your formulated response here.
+For `log_revenue`, the skewness is approximately −1.32. This means the distribution is slightly left-skewed, which matches the histogram from part e. The mean of `log_revenue` (17.40) is also slightly below the median (17.88). Its kurtosis is around 5.58. This is still higher than 3, so the distribution is still more peaked than a normal distribution.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Overall, the log transformation greatly reduces both the skewness and kurtosis of revenue. The distribution becomes more symmetric and less affected by extreme values, although it is still not perfectly normal.
 
 
 # Week 2 
@@ -390,37 +373,22 @@ legend("topright", legend = "Discrete uniform: P = 1/12",
 Write your formulated response here.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Week 3 
 
 For the next part of the assignment, assume that the movies in your data frame are a random sample of a larger population of movies. 
 
 1. Give a 90 percent confidence interval for the variable *revenue*. Interpret the result. \textbf{[2 points]}
 ```{r}
-#WRITE YOUR CODE HERE
 ci_revenue <- t.test(movies2$revenue, conf.level = 0.90)$conf.int
 ci_revenue
 
 ```
 
-The 90% confidence interval for the population mean revenue is approximately [$73,673,117 $96,234,088]. We are 90% confident that the true population mean revenue for all feature movies lies within this interval. In repeated sampling, 90% of such calculated confidence intervals will cover the true population mean.
+The 90% confidence interval for the population mean revenue is [$73,673,117, $96,234,088].
+
+Since the population standard deviation is unknown, the sample standard deviation is used and the confidence interval is based on the Student’s t-distribution. Because the sample is large ((n=606)), the Central Limit Theorem applies, meaning that the sampling distribution of the mean can be treated as approximately normal even though revenue itself is strongly right-skewed.
+
+We are 90% confident that the true population mean revenue lies between $73.7 million and $96.2 million.
 
 2
 
@@ -432,12 +400,11 @@ d. Assume that the variance of revenue for movies with a male director in your d
 *step a*
 
 ```{r}
-#WRITE YOUR CODE HERE
-gender_counts <- table(movies2$director_gender)
+
+gender_counts <- table(movies2$director_gender, useNA = "ifany")
 gender_counts
 ```
-
-In the sample only 50 film directors were female and 522 of them were male directors 
+In the sample, 522 movies were directed by men and 50 by women. Another 34 movies have no recorded value for director_gender, so they are excluded from the comparison. Among movies with a known director gender, about 91% were directed by men and 9% by women.
 
 *step b*
 
@@ -449,32 +416,53 @@ n_total <- n_male + n_female
 binom_test_res <- binom.test(x = n_male, n = n_total, p = 0.5)
 binom_test_res
 ```
+Among the 572 movies with a known director gender, 522 were directed by men and 50 by women. The sample proportion of male-directed movies is therefore about 91.3%.
 
-Null Hypothesis (H_0): p = 0.5
-Alternative Hypothesis (H_1): p != 0.5 
-Significance Level: alpha = 0.05
-p = 0.9125874 > 0.5 
-We can reject H_0
+The null hypothesis states that 50% of movies are directed by men, while the alternative hypothesis states that the proportion is different from 50%.
+
+The binomial test gives a p-value of about 3.84 × 10^-100, which is much smaller than the 5% significance level. Therefore, the null hypothesis is rejected. There is strong statistical evidence that the proportion of movies directed by men is different from 50%.
+
 *step c*
 
 ```{r}
-#WRITE YOUR CODE HERE
+# recode revenue into millions of dollars
+movies2$revenue_millions <- movies2$revenue / 1e6
+
+# variance of revenue (in millions) by director gender
+var_male   <- var(movies2$revenue_millions[movies2$director_gender == "male"],   na.rm = TRUE)
+var_female <- var(movies2$revenue_millions[movies2$director_gender == "female"], na.rm = TRUE)
+
+var_male
+var_female
 
 ```
 
-**Your Answer:**
-
-Write your formulated response here.
+After converting revenue to millions of dollars, the variance is about 28,860.5 for male-directed movies and 4,850.3 for female-directed movies. This means the revenue of male-directed movies is much more spread out, with a variance about six times larger than that of female-directed movies.
 
 *step d*
 ```{r}
-#WRITE YOUR CODE HERE
+# treat the male variance as the known population variance (no sampling uncertainty)
+sigma0_sq <- var(movies2$revenue_millions[movies2$director_gender == "male"], na.rm = TRUE)
+
+female_revenue <- movies2$revenue_millions[movies2$director_gender == "female"]
+female_revenue <- female_revenue[!is.na(female_revenue)]
+n_female <- length(female_revenue)
+s2_female <- var(female_revenue)
+
+df_female <- n_female - 1
+chi2_stat <- df_female * s2_female / sigma0_sq
+chi2_stat
+
+p_value <- 2 * min(pchisq(chi2_stat, df_female), 1 - pchisq(chi2_stat, df_female))
+p_value
 
 ```
 
-**Your Answer:**
+The null hypothesis is that the revenue variance for female-directed movies is equal to 28,860.5, the variance for male-directed movies. The alternative hypothesis is that the two variances are different.
 
-Write your formulated response here.
+Using the 50 female-directed movies, the chi-square test statistic is approximately 8.24 with 49 degrees of freedom. The p-value is approximately 1.44 × 10^-11, which is much smaller than the 5% significance level.
+
+Therefore, we reject the null hypothesis. There is strong evidence that the revenue variance for female-directed movies is different from that of male-directed movies. Since the female-directed movies have a much smaller variance, their revenues are less spread out than those of male-directed movies.
 
 3
 
@@ -485,31 +473,100 @@ c. If you look closely at the resulting plot in b.), you will probably see that 
 *step a*
 
 ```{r}
-#WRITE YOUR CODE HERE
+yearly_revenue <- aggregate(revenue ~ release_year, data = movies2, FUN = mean)
+
+plot(
+  yearly_revenue$release_year, yearly_revenue$revenue,
+  main = "Mean Movie Revenue by Release Year",
+  xlab = "Release Year",
+  ylab = "Mean Revenue (dollars)",
+  pch = 19,
+  col = "steelblue"
+)
 
 ```
 
-**Your Answer:**
+The scatter plot shows that average movie revenue changes quite a lot from year to year, but there is a slight upward trend over time. Revenues are generally lower in the earlier years and somewhat higher in the later years.
 
-Write your formulated response here.
+A simple linear trend gives an increase of about $1.4 million per year. However, the points are widely spread around this trend, so the relationship between release year and average revenue is fairly weak. Overall, average revenue seems to increase over time, but not in a smooth or consistent way.
 
 *step b*
 
 ```{r}
-#WRITE YOUR CODE HERE
+# per-year mean, standard error, and 95% CI half-width
+year_stats <- aggregate(
+  revenue ~ release_year, data = movies2,
+  FUN = function(x) {
+    n <- length(x)
+    m <- mean(x)
+    se <- sd(x) / sqrt(n)
+    ci_halfwidth <- qt(0.975, df = n - 1) * se
+    c(mean = m, lower = m - ci_halfwidth, upper = m + ci_halfwidth)
+  }
+)
+year_stats <- do.call(data.frame, year_stats)
+names(year_stats) <- c("release_year", "mean_revenue", "lower", "upper")
+
+plot(
+  year_stats$release_year, year_stats$mean_revenue,
+  main = "Mean Movie Revenue by Release Year with 95% Confidence Intervals",
+  xlab = "Release Year",
+  ylab = "Mean Revenue (dollars)",
+  pch = 19,
+  col = "steelblue",
+  ylim = range(c(year_stats$lower, year_stats$upper))
+)
+
+arrows(
+  x0 = year_stats$release_year, y0 = year_stats$lower,
+  x1 = year_stats$release_year, y1 = year_stats$upper,
+  angle = 90, code = 3, length = 0.05, col = "steelblue"
+)
 
 ```
 
-**Your Answer:**
+Adding 95% confidence intervals shows that the yearly mean revenues are estimated with quite different levels of precision. In years with only a few movies, such as 1990 and 1991, the intervals are very wide. In later years, where more movies are included, the intervals become much narrower and the estimates are more precise.
 
-Write your formulated response here.
+The confidence intervals also make the upward trend look less clear than in the original scatter plot. Many of the intervals overlap, so the differences between individual years are often not statistically clear. Overall, later years still tend to have higher mean revenues, but there is a lot of uncertainty and year-to-year variation.
 
 *step c*
 
 ```{r}
-#WRITE YOUR CODE HERE
+year_stats <- aggregate(
+  revenue ~ release_year, data = movies2,
+  FUN = function(x) {
+    n <- length(x)
+    sdev <- sd(x)
+    se <- sdev / sqrt(n)
+    tcrit <- qt(0.975, df = n - 1)
+    c(n = n, sd = sdev, se = se, width = 2 * tcrit * se)
+  }
+)
+year_stats <- do.call(data.frame, year_stats)
+names(year_stats) <- c("release_year", "n", "sd", "se", "width")
+
+# correlate CI width with each candidate driver
+cor(year_stats$width, year_stats$n)
+cor(year_stats$width, year_stats$sd)
+
+plot(year_stats$n, year_stats$width,
+     main = "CI Width vs. Number of Movies per Year",
+     xlab = "Number of Movies (n)", ylab = "95% CI Width (dollars)", pch = 19)
+
+plot(year_stats$sd, year_stats$width,
+     main = "CI Width vs. Within-Year Standard Deviation",
+     xlab = "SD of Revenue within Year", ylab = "95% CI Width (dollars)", pch = 19)
 
 ```
+The width of a yearly confidence interval depends mainly on two things: the number of movies in that year and how much their revenues vary.
+
+A smaller sample size gives a wider confidence interval because the standard error becomes larger. The t critical value is also larger when the sample size is small, which makes the interval even wider. A larger standard deviation also increases the width because revenues within that year are more spread out.
+
+This can be seen in the data. For example, 1990 has a very wide confidence interval because it only contains 5 movies and revenue varies a lot between them. In contrast, 2005 has a much narrower interval because it has more observations and a relatively low standard deviation.
+
+Sample size is therefore not the only factor. For example, 2015 has 35 movies, but its confidence interval is still fairly wide because revenue varies greatly within that year. This shows that both sample size and the variability of revenue affect the width of a confidence interval.
+
+
 
 # Week 4 
 
