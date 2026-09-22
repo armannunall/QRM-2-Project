@@ -250,6 +250,24 @@ cat("Log Revenue  -> Skewness:", skew_log, "| Kurtosis:", kurt_log, "\n")
 
 Write your formulated response here.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Week 2 
 1 Is your dataset movies2.tsv the full population, or is it a sample of a larger population? If the latter, how would you describe the full population? \textbf{[4 points]}
 
@@ -328,6 +346,25 @@ Write your formulated response here.
 **Your Answer:**
 
 Write your formulated response here.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Week 3 
 
