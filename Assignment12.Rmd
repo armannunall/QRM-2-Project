@@ -66,19 +66,19 @@ We encourage you to keep your code blocks, printing statements, and final answer
 1.  Find the dataset “movies2.tsv” on Canvas. Describe your data set: How many observations does it have. How many variables are there? How many subjects? What consists of a subject? \textbf{[4 points]}
 
 # Number of observations (rows)
-nrow(movies)
+nrow(movies2)
 
 # Number of variables (columns)
-ncol(movies)
+ncol(movies2)
 
 # Dimensions: observations x variables
-dim(movies)
+dim(movies2)
 
 # Look at the variable names
-names(movies)
+names(movies2)
 
 # View first few observations
-head(movies)
+head(movies2)
 
 ```
 **Your Answer:**
@@ -99,12 +99,20 @@ One subject is one movie. Each row in the dataset represents a single movie.
 #WRITE YOUR CODE HERE
 
 str(movies2)
+sapply(movies2, function(x) length(unique(x)))
+
 
 ```
 
-**Your Answer:**
+Three of the four types of variables are present in the data set.
 
-Write your response here.
+Nominal: Yes. For example, genre is nominal because its categories, such as Drama, Comedy, and Action, have no natural ordering.
+
+Ordinal: No. There are no variables consisting of ordered categories in the data set.
+
+Continuous: Yes. For example, revenue is a continuous variable because it can take many possible numerical values over a range.
+
+Discrete: Yes. For example, vote_count is discrete because it represents a count and can only take whole-number values.
 
 3. A movie studio wants to know which types of movies give maximal revenue. Perform the following steps to provide the movie studio with an analysis which corresponds to their request:
 
@@ -134,10 +142,7 @@ min_rev    <- min(movies2$revenue, na.rm = TRUE)
 cat("Mean:", mean_rev, "\nMedian:", median_rev, "\nMax:", max_rev, "\nMin:", min_rev)
 
 ```
-
-**Your Answer:**
-
-Write your formulated response here.
+The revenue variable ranges from a minimum of $0 to a maximum of $1,506,249,360. The mean revenue is $84,953,602, while the median is only $16,624,121.5. The fact that the mean is more than five times the median shows that revenue is very unevenly distributed: Most movies earn well below the average, while a small number of blockbuster films make extremely high revenues and pull the mean upward.
 
 *Step b*
 
