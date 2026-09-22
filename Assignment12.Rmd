@@ -344,9 +344,7 @@ hist(
 
 ```
 
-**Your Answer:**
-
-Write your formulated response here.
+The 100 sample means have an average that is close to the population average of 6.05. Most of the sample means are also close to 6.05, although they are not exactly the same. The standard deviation of the sample means is about 0.24, showing that there is some variation between the samples. The histogram is roughly bell-shaped, which suggests that the sample means are approximately normally distributed.
 
 *Step e*
 
