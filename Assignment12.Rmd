@@ -81,7 +81,6 @@ names(movies2)
 head(movies2)
 
 ```
-**Your Answer:**
 
 How many observations?
 606 observations.
@@ -130,8 +129,6 @@ Each week consists of 1, 2, or 3 subquestions. The total amount of points you ca
 *Step a*
 
 ```{r}
-
-#WRITE YOUR CODE HERE
 
 # Summary statistics for the revenue variable
 summary_stats <- summary(movies2$revenue)
@@ -385,13 +382,16 @@ For the next part of the assignment, assume that the movies in your data frame a
 
 1. Give a 90 percent confidence interval for the variable *revenue*. Interpret the result. \textbf{[2 points]}
 ```{r}
-#WRITE YOUR CODE HERE
 ci_revenue <- t.test(movies2$revenue, conf.level = 0.90)$conf.int
 ci_revenue
 
 ```
 
-The 90% confidence interval for the population mean revenue is approximately [$73,673,117 $96,234,088]. We are 90% confident that the true population mean revenue for all feature movies lies within this interval. In repeated sampling, 90% of such calculated confidence intervals will cover the true population mean.
+The 90% confidence interval for the population mean revenue is [$73,673,117, $96,234,088].
+
+Since the population standard deviation is unknown, the sample standard deviation is used and the confidence interval is based on the Student’s t-distribution. Because the sample is large ((n=606)), the Central Limit Theorem applies, meaning that the sampling distribution of the mean can be treated as approximately normal even though revenue itself is strongly right-skewed.
+
+We are 90% confident that the true population mean revenue lies between $73.7 million and $96.2 million.
 
 2
 
@@ -403,12 +403,11 @@ d. Assume that the variance of revenue for movies with a male director in your d
 *step a*
 
 ```{r}
-#WRITE YOUR CODE HERE
-gender_counts <- table(movies2$director_gender)
+
+gender_counts <- table(movies2$director_gender, useNA = "ifany")
 gender_counts
 ```
-
-In the sample only 50 film directors were female and 522 of them were male directors 
+In the sample, 522 movies were directed by men and 50 by women. Another 34 movies have no recorded value for director_gender, so they are excluded from the comparison. Among movies with a known director gender, about 91% were directed by men and 9% by women.
 
 *step b*
 
@@ -420,32 +419,53 @@ n_total <- n_male + n_female
 binom_test_res <- binom.test(x = n_male, n = n_total, p = 0.5)
 binom_test_res
 ```
+Among the 572 movies with a known director gender, 522 were directed by men and 50 by women. The sample proportion of male-directed movies is therefore about 91.3%.
 
-Null Hypothesis (H_0): p = 0.5
-Alternative Hypothesis (H_1): p != 0.5 
-Significance Level: alpha = 0.05
-p = 0.9125874 > 0.5 
-We can reject H_0
+The null hypothesis states that 50% of movies are directed by men, while the alternative hypothesis states that the proportion is different from 50%.
+
+The binomial test gives a p-value of about 3.84 × 10^-100, which is much smaller than the 5% significance level. Therefore, the null hypothesis is rejected. There is strong statistical evidence that the proportion of movies directed by men is different from 50%.
+
 *step c*
 
 ```{r}
-#WRITE YOUR CODE HERE
+# recode revenue into millions of dollars
+movies2$revenue_millions <- movies2$revenue / 1e6
+
+# variance of revenue (in millions) by director gender
+var_male   <- var(movies2$revenue_millions[movies2$director_gender == "male"],   na.rm = TRUE)
+var_female <- var(movies2$revenue_millions[movies2$director_gender == "female"], na.rm = TRUE)
+
+var_male
+var_female
 
 ```
 
-**Your Answer:**
-
-Write your formulated response here.
+After converting revenue to millions of dollars, the variance is about 28,860.5 for male-directed movies and 4,850.3 for female-directed movies. This means the revenue of male-directed movies is much more spread out, with a variance about six times larger than that of female-directed movies.
 
 *step d*
 ```{r}
-#WRITE YOUR CODE HERE
+# treat the male variance as the known population variance (no sampling uncertainty)
+sigma0_sq <- var(movies2$revenue_millions[movies2$director_gender == "male"], na.rm = TRUE)
+
+female_revenue <- movies2$revenue_millions[movies2$director_gender == "female"]
+female_revenue <- female_revenue[!is.na(female_revenue)]
+n_female <- length(female_revenue)
+s2_female <- var(female_revenue)
+
+df_female <- n_female - 1
+chi2_stat <- df_female * s2_female / sigma0_sq
+chi2_stat
+
+p_value <- 2 * min(pchisq(chi2_stat, df_female), 1 - pchisq(chi2_stat, df_female))
+p_value
 
 ```
 
-**Your Answer:**
+The null hypothesis is that the revenue variance for female-directed movies is equal to 28,860.5, the variance for male-directed movies. The alternative hypothesis is that the two variances are different.
 
-Write your formulated response here.
+Using the 50 female-directed movies, the chi-square test statistic is approximately 8.24 with 49 degrees of freedom. The p-value is approximately 1.44 × 10^-11, which is much smaller than the 5% significance level.
+
+Therefore, we reject the null hypothesis. There is strong evidence that the revenue variance for female-directed movies is different from that of male-directed movies. Since the female-directed movies have a much smaller variance, their revenues are less spread out than those of male-directed movies.
 
 3
 
@@ -456,13 +476,22 @@ c. If you look closely at the resulting plot in b.), you will probably see that 
 *step a*
 
 ```{r}
-#WRITE YOUR CODE HERE
+yearly_revenue <- aggregate(revenue ~ release_year, data = movies2, FUN = mean)
+
+plot(
+  yearly_revenue$release_year, yearly_revenue$revenue,
+  main = "Mean Movie Revenue by Release Year",
+  xlab = "Release Year",
+  ylab = "Mean Revenue (dollars)",
+  pch = 19,
+  col = "steelblue"
+)
 
 ```
 
-**Your Answer:**
+The scatter plot shows that average movie revenue changes quite a lot from year to year, but there is a slight upward trend over time. Revenues are generally lower in the earlier years and somewhat higher in the later years.
 
-Write your formulated response here.
+A simple linear trend gives an increase of about $1.4 million per year. However, the points are widely spread around this trend, so the relationship between release year and average revenue is fairly weak. Overall, average revenue seems to increase over time, but not in a smooth or consistent way.
 
 *step b*
 
@@ -481,6 +510,9 @@ Write your formulated response here.
 #WRITE YOUR CODE HERE
 
 ```
+
+
+
 
 # Week 4 
 
