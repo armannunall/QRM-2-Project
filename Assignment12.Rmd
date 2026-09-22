@@ -285,7 +285,10 @@ e. Using the formulas of the *Central Limit Theorem*, give the distribution of t
 *Step a*
 
 ```{r}
-#WRITE YOUR CODE HERE
+population_mean <- mean(movies2$vote_average, na.rm = TRUE)
+population_sd   <- sd(movies2$vote_average, na.rm = TRUE)
+population_mean
+population_sd
 
 ```
 
@@ -296,7 +299,10 @@ Write your formulated response here.
 *Step b*
 
 ```{r}
-#WRITE YOUR CODE HERE
+set.seed(123)
+movies_sample <- movies2[sample(1:nrow(movies2), 25), ]
+mean(movies_sample$vote_average)
+
 
 ```
 
@@ -307,7 +313,14 @@ Write your formulated response here.
 *Step c*
 
 ```{r}
-#WRITE YOUR CODE HERE
+
+sample_means <- numeric(100)
+for (i in 1:100) {
+  s <- movies2[sample(1:nrow(movies2), 25), ]
+  sample_means[i] <- mean(s$vote_average)
+}
+head(sample_means)
+
 
 ```
 
@@ -318,7 +331,17 @@ Write your formulated response here.
 *Step d*
 
 ```{r}
-#WRITE YOUR CODE HERE
+summary(sample_means)
+sd(sample_means)
+
+hist(
+  sample_means,
+  main = "Distribution of Sample Means (n = 25, 100 samples)",
+  xlab = "Sample mean of vote_average",
+  ylab = "Frequency",
+  breaks = 15
+)
+
 
 ```
 
@@ -339,7 +362,29 @@ Write your formulated response here.
 Write your formulated response here.
 
 ```{r}
-#WRITE YOUR CODE HERE
+k <- 12
+exp_mean <- (1 + k) / 2
+exp_sd   <- sqrt((k^2 - 1) / 12)
+exp_mean
+exp_sd
+
+mean(movies2$release_month)
+sd(movies2$release_month)
+table(movies2$release_month)
+
+hist(
+  movies2$release_month,
+  breaks = seq(0.5, 12.5, 1),
+  freq = FALSE,
+  main = "Release Month vs. Discrete Uniform(1, 12)",
+  xlab = "Release month",
+  ylab = "Density",
+  col = "lightgray"
+)
+abline(h = 1/12, col = "red", lwd = 2, lty = 2)
+legend("topright", legend = "Discrete uniform: P = 1/12",
+       col = "red", lty = 2, lwd = 2, bty = "n")
+
 
 ```
 
