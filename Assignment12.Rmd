@@ -307,9 +307,8 @@ mean(movies_sample$vote_average)
 
 ```
 
-**Your Answer:**
+The average rating in the random sample of 25 movies is close to 6.05, but not the same. But this is normal because a small random sample will usually be different from the full population.
 
-Write your formulated response here.
 
 *Step c*
 
@@ -325,7 +324,8 @@ head(sample_means)
 
 ```
 
-The average rating in the random sample of 25 movies is close to 6.05, but not the same. But this is normal because a small random sample will usually be different from the full population.
+We created 100 different random samples of 25 movies and calculated the average rating for each sample and most of these are still close to the population average of 6.05, but still not exactly the same.
+
 
 *Step d*
 
