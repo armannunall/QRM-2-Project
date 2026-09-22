@@ -153,9 +153,7 @@ movies2[which.min(movies2$revenue), ]
 
 ```
 
-**Your Answer:**
-
-Write your formulated response here.
+The movie with the highest revenue is Furious 7, with $1,506,249,360. The lowest recorded revenue is $0, and The Velocity of Gary is one example. However, 187 of the 606 movies have revenue recorded as $0, so which.min() just returns the first one it finds.
 
 *Step c*
 
