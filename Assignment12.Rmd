@@ -331,15 +331,11 @@ The 100 sample means have an average that is close to the population average of 
 
 *Step e*
 
-**Your Answer:**
-
-Write your formulated response here.
+The average of 25 movie samples should be nearly normally distributed by the Central Limit Theorem. Expected mean is 6.05 and the expected standard deviation is about 0.24. These values are closed to the one we got from the 100 random samples. Small differences are normal, because we only used 100 samples.
 
 3. Is there a variable in your data set which you would expect to follow a discrete uniform distribution? Explain, without looking at the data, why you expect this data to be discrete uniform. If the data would indeed follow a discrete uniform distribution, what would you expect the mean and standard deviation of this variable to be? Next, plot a histogram of the variable, and plot an appropriate discrete uniform distribution on top of this histogram. Comment whether the variable indeed follows this expected distribution. If the distribution deviates from the discrete uniform distribution, explain why this is the case. \textbf{[6 points]}
 
-**Your Answer:**
-
-Write your formulated response here.
+A possible variable is release_month, because its values range from 1 to 12. If movies were released in any month with equal probability, then each month would have the same probability and this would be a discrete uniform distribution. The expected mean is 6.5 and the expected standard deviation is about 3.45.
 
 ```{r}
 k <- 12
@@ -368,9 +364,7 @@ legend("topright", legend = "Discrete uniform: P = 1/12",
 
 ```
 
-**Your Answer:**
-
-Write your formulated response here.
+In the actual data, the mean is 6.74 and the standard deviation is 3.44, which are close to the expected values. However, the histogram shows that the months are not exactly equally represented, so the variable does not perfectly follow a discrete uniform distribution.This could be because movies tend to be released in certain months for seasonal, holiday, and movie release reasons.
 
 
 # Week 3 
