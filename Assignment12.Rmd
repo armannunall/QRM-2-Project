@@ -297,9 +297,7 @@ population_sd
 
 ```
 
-**Your Answer:**
-
-Write your formulated response here.
+The average vote_average in the full dataset is 6.05.
 
 *Step b*
 
@@ -329,9 +327,7 @@ head(sample_means)
 
 ```
 
-**Your Answer:**
-
-Write your formulated response here.
+The average rating in the random sample of 25 movies is close to 6.05, but not the same. But this is normal because a small random sample will usually be different from the full population.
 
 *Step d*
 
