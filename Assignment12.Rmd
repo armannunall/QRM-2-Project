@@ -61,6 +61,9 @@ The exercises are designed such that you should be able to finish the majority o
 
 We encourage you to keep your code blocks, printing statements, and final answers, as short as possible. In any case, there is a page limit of 6 pages per week, which encompasses the total length of this document which consists of the questions, your coding lines, and your answers. When your answers to questions of the respective week exceed this page limit, they will not be graded, resulting in zero points.
 
+movies2 <- read.delim("movies2.tsv", header = TRUE, sep = "\t", 
+                       quote = "\"", stringsAsFactors = FALSE, na.strings = "NA")
+
 # Week 1 
 
 1.  Find the dataset “movies2.tsv” on Canvas. Describe your data set: How many observations does it have. How many variables are there? How many subjects? What consists of a subject? \textbf{[4 points]}
