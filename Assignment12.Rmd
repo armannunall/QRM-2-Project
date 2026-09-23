@@ -10,6 +10,7 @@ date:  "`r format(Sys.Date(), '%d-%m-%Y')`"
 output: 
   pdf_document:
     number_sections: true
+    latex_engine: xelatex
   html_document:
     df_print: paged
 
@@ -23,17 +24,13 @@ header-includes:
     breaklines,
     commandchars=\\\{\}
   }
-format:
-  html:
-    code-overflow: wrap
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.width = 5, fig.height = 3)
 ```
 
 # Introduction
-
 
 This assignment is to be completed in groups of 4-5. Further, all students in your group need to be assigned to the same R tutorial group (Friday's tutorial). You can sign yourself up for a group on Canvas. Please do so \textbf{before the start of your first R tutorial on Friday September 4th.} You can use the Discussion Board in Canvas if you do not have a group yet or if your group is incomplete.
 
@@ -61,9 +58,18 @@ The exercises are designed such that you should be able to finish the majority o
 
 We encourage you to keep your code blocks, printing statements, and final answers, as short as possible. In any case, there is a page limit of 6 pages per week, which encompasses the total length of this document which consists of the questions, your coding lines, and your answers. When your answers to questions of the respective week exceed this page limit, they will not be graded, resulting in zero points.
 
+
+```{r load-data}
 movies2 <- read.delim("movies2.tsv", header = TRUE, sep = "\t", 
                        quote = "\"", stringsAsFactors = FALSE, na.strings = "NA")
+```
 
+
+
+	
+
+	
+	
 # Week 1 
 
 1.  Find the dataset “movies2.tsv” on Canvas. Describe your data set: How many observations does it have. How many variables are there? How many subjects? What consists of a subject? \textbf{[4 points]}
@@ -80,8 +86,6 @@ dim(movies2)
 # Look at the variable names
 names(movies2)
 
-# View first few observations
-head(movies2)
 
 ```
 
@@ -98,13 +102,9 @@ One subject is one movie. Each row in the dataset represents a single movie.
 2. Which of the following types of variables are present in your data set? (i) nominal; (ii) ordinal; (iii); continuous; (iv) discrete. If present, name one example of such a variable present in your data set. \textbf{[4 points]}
 
 ```{r answer 2}
-
 str(movies2)
 sapply(movies2, function(x) length(unique(x)))
-
-
 ```
-
 Three of the four types of variables are present in the data set.
 
 Nominal: Yes. For example, genre is nominal because its categories, such as Drama, Comedy, and Action, have no natural ordering.
@@ -133,31 +133,25 @@ Each week consists of 1, 2, or 3 subquestions. The total amount of points you ca
 ```{r}
 
 # Summary statistics for the revenue variable
-summary_stats <- summary(movies2$revenue)
 mean_rev   <- mean(movies2$revenue, na.rm = TRUE)
 median_rev <- median(movies2$revenue, na.rm = TRUE)
 max_rev    <- max(movies2$revenue, na.rm = TRUE)
 min_rev    <- min(movies2$revenue, na.rm = TRUE)
 cat("Mean:", mean_rev, "\nMedian:", median_rev, "\nMax:", max_rev, "\nMin:", min_rev)
-
 ```
 The revenue variable ranges from a minimum of $0 to a maximum of $1,506,249,360. The mean revenue is $84,953,602, while the median is only $16,624,121.5. The fact that the mean is more than five times the median shows that revenue is very unevenly distributed: Most movies earn well below the average, while a small number of blockbuster films make extremely high revenues and pull the mean upward.
 
 *Step b*
 
 ```{r}
-
-movies2[which.max(movies2$revenue), ]
-movies2[which.min(movies2$revenue), ]
-
+movies2[which.max(movies2$revenue), c("title", "revenue")]
+movies2[which.min(movies2$revenue), c("title", "revenue")]
 ```
-
 The movie with the highest revenue is Furious 7, with $1,506,249,360. The lowest recorded revenue is $0, and The Velocity of Gary is one example. However, 187 of the 606 movies have revenue recorded as $0, so which.min() just returns the first one it finds.
 
 *Step c*
 
 ```{r}
-
 hist(
   movies2$revenue,
   main = "Distribution of Movie Revenue",
@@ -165,9 +159,7 @@ hist(
   ylab = "Frequency",
   breaks = 30
 )
-
 ```
-
 The histogram of revenue is strongly right-skewed. Most movies are concentrated near $0 revenue, while only a small number of movies have very high revenues. Around 387 of the 606 movies are in the first bin, while only about 20 movies earn more than $500 million. A few blockbusters, such as Furious 7, are far out in the right tail.
 
 This shows that movie revenues are very uneven. Most movies earn relatively little, while a small number of successful movies earn extremely high amounts. Because of these blockbusters, the mean revenue is much higher than the median, so the median gives a better idea of what a typical movie earns.
@@ -175,17 +167,12 @@ This shows that movie revenues are very uneven. Most movies earn relatively litt
 *Step d*
 
 ```{r}
-#make var
 movies2$log_revenue <- log(movies2$revenue)
 
-#check 0 obs
-movies2[movies2$revenue == 0, c("revenue", "log_revenue")]
+head(movies2[movies2$revenue == 0, c("revenue", "log_revenue")])
 
-#calc mean
 mean(movies2$log_revenue)
-
 ```
-
 When log() is applied to revenue, the 187 movies with revenue equal to $0 become -Inf in R, not NA. This is because the logarithm of 0 is not defined and approaches negative infinity.
 
 As a result, the mean of log_revenue is also -Inf. Even one -Inf value makes the overall mean -Inf, so this mean cannot be meaningfully interpreted.
@@ -193,16 +180,13 @@ As a result, the mean of log_revenue is also -Inf. Even one -Inf value makes the
 *Step e*
 
 ```{r}
-
 movies2$log_revenue <- ifelse(
   movies2$revenue == 0,
   NA,
   log(movies2$revenue)
 )
-
 #calculate mean 
 mean(movies2$log_revenue, na.rm = TRUE)
-
 #create hist
 hist(
   movies2$log_revenue,
@@ -211,9 +195,7 @@ hist(
   ylab = "Frequency",
   breaks = 30
 )
-
 ```
-
 After replacing the -Inf values for movies with zero revenue with NA, the mean of log_revenue is approximately 17.40. R now calculates the mean using the 419 movies with positive revenue.
 
 The histogram of log_revenue is much more symmetric than the original revenue histogram. Instead of having a long right tail, most values are now concentrated around 17–19, with a slightly longer tail on the left. The distribution is therefore much closer to a bell shape, although it is still slightly left-skewed.
@@ -230,7 +212,6 @@ skewness <- function(x) {
   s3 <- (sum((x - mean(x))^2) / n)^(3/2)
   return(m3 / s3)
 }
-
 kurtosis <- function(x) {
   x <- na.omit(x)
   n <- length(x)
@@ -238,7 +219,6 @@ kurtosis <- function(x) {
   s4 <- (sum((x - mean(x))^2) / n)^2
   return(m4 / s4) # Pearson kurtosis (normal distribution = 3)
 }
-
 skew_rev <- skewness(movies2$revenue)
 kurt_rev <- kurtosis(movies2$revenue)
 
@@ -247,16 +227,14 @@ kurt_log <- kurtosis(movies2$log_revenue)
 
 cat("Raw Revenue  -> Skewness:", skew_rev, "| Kurtosis:", kurt_rev, "\n")
 cat("Log Revenue  -> Skewness:", skew_log, "| Kurtosis:", kurt_log, "\n")
-
 ```
-
 The skewness of raw revenue is approximately 3.75. Since this is a large positive value, it confirms that revenue is strongly right-skewed, with a long tail toward very high revenues. This also explains why the mean is higher than the median. The kurtosis is about 20.76, which is much higher than 3, the kurtosis of a normal distribution. This shows that the distribution has a sharp peak and several extreme values, such as blockbuster movies.
 
 For `log_revenue`, the skewness is approximately −1.32. This means the distribution is slightly left-skewed, which matches the histogram from part e. The mean of `log_revenue` (17.40) is also slightly below the median (17.88). Its kurtosis is around 5.58. This is still higher than 3, so the distribution is still more peaked than a normal distribution.
 
 Overall, the log transformation greatly reduces both the skewness and kurtosis of revenue. The distribution becomes more symmetric and less affected by extreme values, although it is still not perfectly normal.
 
-
+\newpage
 # Week 2 
 1 Is your dataset movies2.tsv the full population, or is it a sample of a larger population? If the latter, how would you describe the full population? \textbf{[4 points]}
 
@@ -330,7 +308,7 @@ hist(
 
 ```
 
-The 100 sample means have an average that is close to the population average of 6.05. Most of the sample means are also close to 6.05, although they are not exactly the same. The standard deviation of the sample means is about 0.24, showing that there is some variation between the samples. The histogram is roughly bell-shaped, which suggests that the sample means are approximately normally distributed.
+The 100 sample means have an average that is close to the population average of 6.05. Most of the sample means are also close to 6.05, although they are not exactly the same. The standard deviation of the sample means is about 0.23, showing that there is some variation between the samples. The histogram is roughly bell-shaped, which suggests that the sample means are approximately normally distributed.
 
 *Step e*
 
@@ -369,7 +347,7 @@ legend("topright", legend = "Discrete uniform: P = 1/12",
 
 In the actual data, the mean is 6.74 and the standard deviation is 3.44, which are close to the expected values. However, the histogram shows that the months are not exactly equally represented, so the variable does not perfectly follow a discrete uniform distribution.This could be because movies tend to be released in certain months for seasonal, holiday, and movie release reasons.
 
-
+\newpage
 # Week 3 
 
 For the next part of the assignment, assume that the movies in your data frame are a random sample of a larger population of movies. 
@@ -412,6 +390,7 @@ n_total <- n_male + n_female
 
 binom_test_res <- binom.test(x = n_male, n = n_total, p = 0.5)
 binom_test_res
+binom_test_res$p.value
 ```
 Among the 572 movies with a known director gender, 522 were directed by men and 50 by women. The sample proportion of male-directed movies is therefore about 91.3%.
 
@@ -485,7 +464,7 @@ plot(
 
 The scatter plot shows that average movie revenue changes quite a lot from year to year, but there is a slight upward trend over time. Revenues are generally lower in the earlier years and somewhat higher in the later years.
 
-A simple linear trend gives an increase of about $1.4 million per year. However, the points are widely spread around this trend, so the relationship between release year and average revenue is fairly weak. Overall, average revenue seems to increase over time, but not in a smooth or consistent way.
+The points are widely spread around this trend, so the relationship between release year and average revenue is fairly weak. Overall, average revenue seems to increase over time, but not in a smooth or consistent way.
 
 *step b*
 
@@ -541,6 +520,7 @@ year_stats <- aggregate(
 )
 year_stats <- do.call(data.frame, year_stats)
 names(year_stats) <- c("release_year", "n", "sd", "se", "width")
+year_stats[year_stats$release_year %in% c(1990, 2005, 2015), ]
 
 # correlate CI width with each candidate driver
 cor(year_stats$width, year_stats$n)
@@ -549,10 +529,6 @@ cor(year_stats$width, year_stats$sd)
 plot(year_stats$n, year_stats$width,
      main = "CI Width vs. Number of Movies per Year",
      xlab = "Number of Movies (n)", ylab = "95% CI Width (dollars)", pch = 19)
-
-plot(year_stats$sd, year_stats$width,
-     main = "CI Width vs. Within-Year Standard Deviation",
-     xlab = "SD of Revenue within Year", ylab = "95% CI Width (dollars)", pch = 19)
 
 ```
 The width of a yearly confidence interval depends mainly on two things: the number of movies in that year and how much their revenues vary.
@@ -563,7 +539,7 @@ This can be seen in the data. For example, 1990 has a very wide confidence inter
 
 Sample size is therefore not the only factor. For example, 2015 has 35 movies, but its confidence interval is still fairly wide because revenue varies greatly within that year. This shows that both sample size and the variability of revenue affect the width of a confidence interval.
 
-
+\newpage
 
 # Week 4 
 
