@@ -556,7 +556,8 @@ g. Who do you think is correct? Bob or Chantal? What would you advise the movie 
 *step a*
 
 ```{r}
-#WRITE YOUR CODE HERE
+model_level <- lm(revenue ~ budget, data = movies2)
+summary(model_level)
 
 ```
 
@@ -567,7 +568,9 @@ Write your formulated response here.
 *step b*
 
 ```{r}
-#WRITE YOUR CODE HERE
+coef(model_level)["budget"]
+confint(model_level)["budget", ]
+
 
 ```
 
@@ -578,7 +581,13 @@ Write your formulated response here.
 *step c*
 
 ```{r}
-#WRITE YOUR CODE HERE
+
+b1  <- coef(summary(model_level))["budget", "Estimate"]
+se1 <- coef(summary(model_level))["budget", "Std. Error"]
+t_stat  <- (b1 - 1) / se1
+p_value <- pt(t_stat, df = model_level$df.residual, lower.tail = FALSE)
+c(t_stat = t_stat, df = model_level$df.residual, p_value = p_value)
+
 
 ```
 
@@ -589,7 +598,12 @@ Write your formulated response here.
 *step d*
 
 ```{r}
-#WRITE YOUR CODE HERE
+
+movies2$log_budget <- ifelse(movies2$budget == 0, NA, log(movies2$budget))
+
+model_log <- lm(log_revenue ~ log_budget, data = movies2)
+summary(model_log)
+
 
 ```
 
@@ -600,7 +614,13 @@ Write your formulated response here.
 *step e*
 
 ```{r}
-#WRITE YOUR CODE HERE
+b_log  <- coef(summary(model_log))["log_budget", "Estimate"]
+se_log <- coef(summary(model_log))["log_budget", "Std. Error"]
+t_one  <- (b_log - 1) / se_log
+c(t_stat = t_one, p_two_sided = 2 * pt(abs(t_one), model_log$df.residual, lower.tail = FALSE))
+confint(model_log)["log_budget", ]
+
+
 
 ```
 
@@ -623,7 +643,27 @@ Write your formulated response here.
 *step g*
 
 ```{r}
-#WRITE YOUR CODE HERE
+c(level = summary(model_level)$r.squared, loglog = summary(model_log)$r.squared)
+
+# the two models do not use the same movies, so re-estimate the level-level
+# model on the 401 movies that the log-log model uses
+sub <- movies2[!is.na(movies2$log_revenue) & !is.na(movies2$log_budget), ]
+m_level_sub <- lm(revenue ~ budget, data = sub)
+m_log_sub   <- lm(log_revenue ~ log_budget, data = sub)
+
+# compare both in dollars: squared correlation of actual and predicted revenue
+c(level  = cor(sub$revenue, fitted(m_level_sub))^2,
+  loglog = cor(sub$revenue, exp(fitted(m_log_sub)))^2)
+
+par(mfrow = c(1, 2))
+plot(fitted(m_level_sub), resid(m_level_sub), pch = 19, cex = 0.4, col = "steelblue",
+     main = "Level-level residuals", xlab = "Fitted revenue", ylab = "Residual")
+abline(h = 0, col = "red")
+plot(fitted(m_log_sub), resid(m_log_sub), pch = 19, cex = 0.4, col = "steelblue",
+     main = "Log-log residuals", xlab = "Fitted log revenue", ylab = "Residual")
+abline(h = 0, col = "red")
+par(mfrow = c(1, 1))
+
 
 ```
 
@@ -639,7 +679,12 @@ b. Using the insights from the scatterplot, your linear model, and your data, fi
 *step a*
 
 ```{r}
-#WRITE YOUR CODE HERE
+plot(movies2$log_budget, movies2$log_revenue,
+     main = "Log Revenue vs. Log Budget",
+     xlab = "Log Budget", ylab = "Log Revenue",
+     pch = 19, cex = 0.5, col = "steelblue")
+abline(model_log, col = "red", lwd = 2)
+
 
 ```
 
@@ -650,7 +695,13 @@ Write your formulated response here.
 *step b*
 
 ```{r}
-#WRITE YOUR CODE HERE
+movies2$pred_log_revenue  <- predict(model_log, newdata = movies2)
+movies2$resid_log_revenue <- movies2$log_revenue - movies2$pred_log_revenue
+
+movies2[which.max(movies2$resid_log_revenue),
+        c("title", "budget", "revenue", "log_revenue",
+          "pred_log_revenue", "resid_log_revenue")]
+
 
 ```
 
@@ -673,7 +724,10 @@ f. One executive at the studio wants to time the release of the movie to a speci
 *step a*
 
 ```{r}
-#WRITE YOUR CODE HERE
+
+sort(table(movies2$genre, useNA = "ifany"), decreasing = TRUE)
+
+
 
 ```
 
@@ -684,7 +738,12 @@ Write your formulated response here.
 *step b*
 
 ```{r}
-#WRITE YOUR CODE HERE
+top3 <- names(sort(table(movies2$genre), decreasing = TRUE))[1:3]
+movies2$genre2 <- ifelse(movies2$genre %in% top3, movies2$genre, "Other")
+movies2$genre2 <- factor(movies2$genre2, levels = c(top3, "Other"))
+
+table(movies2$genre2)
+
 
 ```
 
@@ -695,7 +754,9 @@ Write your formulated response here.
 *step c*
 
 ```{r}
-#WRITE YOUR CODE HERE
+model_c <- lm(log_revenue ~ log_budget + genre2 + release_year, data = movies2)
+summary(model_c)
+
 
 ```
 
@@ -706,7 +767,24 @@ Write your formulated response here.
 *step d*
 
 ```{r}
-#WRITE YOUR CODE HERE
+model_d <- lm(log_revenue ~ log_budget + genre2 + release_year + runtime,
+              data = movies2)
+summary(model_d)
+
+newmovie <- data.frame(
+  log_budget   = log(20000000),
+  genre2       = factor("Drama", levels = levels(movies2$genre2)),
+  release_year = 2026,
+  runtime      = 120
+)
+
+pred_log <- predict(model_d, newdata = newmovie, interval = "prediction", level = 0.90)
+pred_log          # on the log scale
+exp(pred_log)     # back-transformed to dollars
+
+sigma_d <- summary(model_d)$sigma
+exp(pred_log[1, "fit"] + sigma_d^2 / 2)   # expected (mean) revenue
+
 
 ```
 
@@ -717,7 +795,34 @@ Write your formulated response here.
 *step e*
 
 ```{r}
-#WRITE YOUR CODE HERE
+d <- model_d$model      # the 401 movies actually used, plus their regressors
+u <- resid(model_d)
+
+par(mar = c(4, 4, 2, 1))
+
+plot(d$log_budget, u,
+     pch = 19,
+     cex = 0.4,
+     col = "steelblue",
+     main = "Residuals vs. log budget",
+     xlab = "Log Budget",
+     ylab = "Residual")
+
+abline(h = 0, col = "red")
+
+plot(d$runtime, u, pch = 19, cex = 0.4, col = "steelblue",
+     main = "Residuals vs. runtime", xlab = "Runtime (min)", ylab = "Residual")
+abline(h = 0, col = "red")
+plot(d$release_year, u, pch = 19, cex = 0.4, col = "steelblue",
+     main = "Residuals vs. release year", xlab = "Release Year", ylab = "Residual")
+abline(h = 0, col = "red")
+boxplot(u ~ d$genre2, main = "Residuals by genre2",
+        xlab = "", ylab = "Residual", col = "lightgray")
+par(mfrow = c(1, 1))
+
+# supporting evidence: does the size of the residuals depend on log budget?
+summary(lm(abs(u) ~ d$log_budget))$coefficients
+round(tapply(u, d$genre2, sd), 3)
 
 ```
 
@@ -729,7 +834,17 @@ Write your formulated response here.
 
 
 ```{r}
-#WRITE YOUR CODE HERE
+movies2$month <- factor(movies2$release_month)
+sub_f <- subset(movies2, !is.na(log_revenue) & !is.na(log_budget))
+
+model_nomonth <- lm(log_revenue ~ log_budget + genre2 + release_year + runtime,
+                    data = sub_f)
+model_month   <- lm(log_revenue ~ log_budget + genre2 + release_year + runtime + month,
+                    data = sub_f)
+
+anova(model_nomonth, model_month)
+round(coef(summary(model_month))[grep("^month", rownames(coef(summary(model_month)))), ], 3)
+
 
 ```
 
